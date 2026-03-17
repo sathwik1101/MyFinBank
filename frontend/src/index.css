@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --blue: #1565c0;
+  --blue-dark: #0d47a1;
+  --blue-light: #1976d2;
+  --blue-pale: #e3f2fd;
+  --red: #c62828;
+  --red-mid: #e53935;
+  --red-pale: #ffebee;
+  --yellow: #f9a825;
+  --yellow-pale: #fff8e1;
+  --surface: #f5f7fa;
+  --border: #dde3ea;
+  --text: #1a1a2e;
+  --muted: #607d8b;
+  --white: #ffffff;
+}
+
+body {
+  font-family: 'Inter', 'Roboto', sans-serif;
+  background-color: var(--surface);
+  color: var(--text);
+}
+
+/* MUI overrides for Superman theme */
+.MuiButton-containedPrimary {
+  background-color: var(--blue-dark) !important;
+}
+
+.MuiTab-root.Mui-selected {
+  color: var(--blue-dark) !important;
+}
+
+.MuiTabs-indicator {
+  background-color: var(--red) !important;
+}
+
+.MuiStepIcon-root.Mui-active {
+  color: var(--blue-dark) !important;
+}
+
+.MuiStepIcon-root.Mui-completed {
+  color: var(--red) !important;
+}
