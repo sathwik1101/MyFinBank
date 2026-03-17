@@ -71,22 +71,39 @@ const Dashboard = () => {
       {/* Header */}
       <Box sx={{
         display: 'flex',
+        flexDirection: { xs: 'column', sm: 'row' },
         justifyContent: 'space-between',
-        alignItems: 'center',
-        mb: 4,
-        pb: 3,
+        alignItems: { xs: 'flex-start', sm: 'center' },
+        gap: { xs: 1.5, sm: 0 },
+        mb: { xs: 2, md: 4 },
+        pb: { xs: 2, md: 3 },
         borderBottom: '1px solid #e0e0e0',
       }}>
         <Box>
-          <Typography variant="h4" fontWeight="bold" color="#0d47a1">
+          <Typography
+            variant="h4"
+            fontWeight="bold"
+            color="#0d47a1"
+            sx={{ fontSize: { xs: '1.4rem', sm: '1.8rem', md: '2.125rem' } }}
+          >
             {greeting}, {user?.name}! 👋
           </Typography>
           <Typography variant="body1" color="text.secondary" mt={0.5}>
             Here's your financial overview
           </Typography>
         </Box>
-        <Typography variant="body2" color="text.secondary"
-          sx={{ backgroundColor: 'white', px: 2, py: 1, borderRadius: 2, boxShadow: 1 }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            backgroundColor: 'white',
+            px: 2, py: 1,
+            borderRadius: 2,
+            boxShadow: 1,
+            fontSize: { xs: '0.7rem', sm: '0.875rem' },
+            whiteSpace: { xs: 'normal', sm: 'nowrap' },
+          }}
+        >
           📅 {today}
         </Typography>
       </Box>
@@ -98,27 +115,32 @@ const Dashboard = () => {
       ) : (
         <>
           {/* Stats Row */}
-          <Grid container spacing={3} mb={4}>
+          <Grid container spacing={{ xs: 2, md: 3 }} mb={{ xs: 2, md: 4 }}>
             {[
               { label: 'Total Balance', value: `₹${totalBalance.toLocaleString()}`, color: '#0d47a1', border: '#0d47a1', icon: '💰' },
               { label: 'Active Accounts', value: activeAccounts, color: '#2e7d32', border: '#2e7d32', icon: '🏦' },
               { label: 'Active Loans', value: activeLoans, color: '#e65100', border: '#e65100', icon: '💳' },
               { label: 'Pending Requests', value: myAccounts.filter(a => a.status === 'REQUESTED').length, color: '#6a1b9a', border: '#6a1b9a', icon: '⏳' },
             ].map((stat) => (
-              <Grid item xs={12} sm={6} md={3} key={stat.label}>
+              <Grid item xs={6} sm={6} md={3} key={stat.label}>
                 <Card elevation={2} sx={{
                   borderRadius: 3,
-                  borderTop: `4px solid ${stat.border}`, borderLeft: 'none',
+                  borderTop: `4px solid ${stat.border}`,
+                  borderLeft: 'none',
                   transition: 'transform 0.2s',
                   '&:hover': { transform: 'translateY(-3px)', boxShadow: 4 },
                 }}>
-                  <CardContent sx={{ p: 3 }}>
+                  <CardContent sx={{ p: { xs: 1.5, md: 3 } }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Box>
-                        <Typography variant="body2" color="text.secondary" mb={1}>{stat.label}</Typography>
-                        <Typography variant="h4" fontWeight="bold" color={stat.color}>{stat.value}</Typography>
+                        <Typography variant="body2" color="text.secondary" mb={1} sx={{ fontSize: { xs: '0.7rem', md: '0.875rem' } }}>
+                          {stat.label}
+                        </Typography>
+                        <Typography fontWeight="bold" color={stat.color} sx={{ fontSize: { xs: '1.2rem', md: '2.125rem' } }}>
+                          {stat.value}
+                        </Typography>
                       </Box>
-                      <Typography fontSize={36}>{stat.icon}</Typography>
+                      <Typography sx={{ fontSize: { xs: 24, md: 36 } }}>{stat.icon}</Typography>
                     </Box>
                   </CardContent>
                 </Card>
@@ -127,14 +149,16 @@ const Dashboard = () => {
           </Grid>
 
           {/* Accounts + Transactions */}
-          <Grid container spacing={3} mb={4}>
+          <Grid container spacing={{ xs: 2, md: 3 }} mb={{ xs: 2, md: 4 }}>
 
             {/* My Accounts */}
             <Grid item xs={12} md={5}>
               <Card elevation={2} sx={{ borderRadius: 3, height: '100%' }}>
-                <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                    <Typography variant="h6" fontWeight="bold">🏦 My Accounts</Typography>
+                <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                    <Typography variant="h6" fontWeight="bold" sx={{ fontSize: { xs: '1rem', md: '1.25rem' } }}>
+                      🏦 My Accounts
+                    </Typography>
                     <Button size="small" variant="outlined" sx={{ borderRadius: 2 }}
                       onClick={() => navigate('/passbook')}>View All →</Button>
                   </Box>
@@ -143,27 +167,35 @@ const Dashboard = () => {
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      p: 2.5,
+                      p: { xs: 1.5, md: 2.5 },
                       mb: 2,
                       borderRadius: 2,
                       background: account.accountType === 'SAVINGS'
                         ? 'linear-gradient(135deg, #e8eaf6, #c5cae9)'
                         : 'linear-gradient(135deg, #ffebee, #ffcdd2)',
                       border: `1px solid ${account.accountType === 'SAVINGS' ? '#9fa8da' : '#ef9a9a'}`,
+                      flexWrap: { xs: 'wrap', sm: 'nowrap' },
+                      gap: 1,
                     }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                         {account.accountType === 'SAVINGS'
-                          ? <SavingsIcon sx={{ color: '#0d47a1', fontSize: 36 }} />
-                          : <AccountBalanceIcon sx={{ color: '#b71c1c', fontSize: 36 }} />}
+                          ? <SavingsIcon sx={{ color: '#0d47a1', fontSize: { xs: 28, md: 36 } }} />
+                          : <AccountBalanceIcon sx={{ color: '#b71c1c', fontSize: { xs: 28, md: 36 } }} />}
                         <Box>
-                          <Typography fontWeight="bold" variant="body1" color={account.accountType === 'SAVINGS' ? '#0d47a1' : '#b71c1c'}>
+                          <Typography fontWeight="bold" variant="body1"
+                            color={account.accountType === 'SAVINGS' ? '#0d47a1' : '#b71c1c'}
+                            sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>
                             {account.accountNumber}
                           </Typography>
-                          <Typography variant="body2" color="text.secondary">{account.accountType} Account</Typography>
+                          <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', md: '0.875rem' } }}>
+                            {account.accountType} Account
+                          </Typography>
                         </Box>
                       </Box>
                       <Box sx={{ textAlign: 'right' }}>
-                        <Typography fontWeight="bold" variant="h6" color={account.accountType === 'SAVINGS' ? '#0d47a1' : '#b71c1c'}>
+                        <Typography fontWeight="bold"
+                          color={account.accountType === 'SAVINGS' ? '#0d47a1' : '#b71c1c'}
+                          sx={{ fontSize: { xs: '1rem', md: '1.25rem' } }}>
                           ₹{account.balance?.toLocaleString()}
                         </Typography>
                         <Chip label={account.status} color={getStatusColor(account.status)} size="small" sx={{ mt: 0.5 }} />
@@ -180,9 +212,11 @@ const Dashboard = () => {
             {/* Recent Transactions */}
             <Grid item xs={12} md={7}>
               <Card elevation={2} sx={{ borderRadius: 3, height: '100%' }}>
-                <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                    <Typography variant="h6" fontWeight="bold">📋 Recent Transactions</Typography>
+                <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                    <Typography variant="h6" fontWeight="bold" sx={{ fontSize: { xs: '1rem', md: '1.25rem' } }}>
+                      📋 Recent Transactions
+                    </Typography>
                     <Button size="small" variant="outlined" sx={{ borderRadius: 2 }}
                       onClick={() => navigate('/passbook')}>View All →</Button>
                   </Box>
@@ -191,36 +225,40 @@ const Dashboard = () => {
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      py: 2,
-                      px: 2,
+                      py: 1.5,
+                      px: { xs: 1, md: 2 },
                       mb: 1,
                       borderRadius: 2,
                       backgroundColor: index % 2 === 0 ? '#fafafa' : 'white',
                       border: '1px solid #f0f0f0',
                       '&:hover': { backgroundColor: '#f5f5f5' },
                     }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, md: 2 } }}>
                         <Box sx={{
-                          width: 44, height: 44, borderRadius: '50%',
+                          width: { xs: 36, md: 44 }, height: { xs: 36, md: 44 },
+                          borderRadius: '50%',
                           backgroundColor: txn.type === 'CREDIT' ? '#e8f5e9' : '#ffebee',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           flexShrink: 0,
                         }}>
                           {txn.type === 'CREDIT'
-                            ? <ArrowUpwardIcon sx={{ color: '#2e7d32', fontSize: 22 }} />
-                            : <ArrowDownwardIcon sx={{ color: '#c62828', fontSize: 22 }} />}
+                            ? <ArrowUpwardIcon sx={{ color: '#2e7d32', fontSize: { xs: 18, md: 22 } }} />
+                            : <ArrowDownwardIcon sx={{ color: '#c62828', fontSize: { xs: 18, md: 22 } }} />}
                         </Box>
                         <Box>
-                          <Typography variant="body1" fontWeight="bold">{txn.transactionCategory}</Typography>
-                          <Typography variant="body2" color="text.secondary">
+                          <Typography fontWeight="bold" sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>
+                            {txn.transactionCategory}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.65rem', md: '0.875rem' } }}>
                             {new Date(txn.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                             {' • '}
                             {new Date(txn.date).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
                           </Typography>
                         </Box>
                       </Box>
-                      <Typography fontWeight="bold" variant="h6"
-                        color={txn.type === 'CREDIT' ? '#2e7d32' : '#c62828'}>
+                      <Typography fontWeight="bold"
+                        color={txn.type === 'CREDIT' ? '#2e7d32' : '#c62828'}
+                        sx={{ fontSize: { xs: '0.9rem', md: '1.25rem' }, flexShrink: 0 }}>
                         {txn.type === 'CREDIT' ? '+' : '-'}₹{txn.amount?.toLocaleString()}
                       </Typography>
                     </Box>
@@ -234,22 +272,24 @@ const Dashboard = () => {
 
           {/* Quick Actions */}
           <Card elevation={2} sx={{ borderRadius: 3, mb: 4 }}>
-            <CardContent sx={{ p: 3 }}>
-              <Typography variant="h6" fontWeight="bold" mb={3}>⚡ Quick Actions</Typography>
-              <Grid container spacing={2}>
+            <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+              <Typography variant="h6" fontWeight="bold" mb={2} sx={{ fontSize: { xs: '1rem', md: '1.25rem' } }}>
+                ⚡ Quick Actions
+              </Typography>
+              <Grid container spacing={{ xs: 1, md: 2 }}>
                 {quickActions.map((action) => (
-                  <Grid item xs={6} sm={3} md={1.5} key={action.label}>
+                  <Grid item xs={4} sm={3} md={1.5} key={action.label}>
                     <Box onClick={() => navigate(action.path)} sx={{
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      p: 2.5,
+                      p: { xs: 1.5, md: 2.5 },
                       borderRadius: 3,
                       backgroundColor: action.bg,
                       cursor: 'pointer',
-                      gap: 1.5,
-                      minHeight: 95,
+                      gap: 1,
+                      minHeight: { xs: 75, md: 95 },
                       border: `1px solid ${action.color}22`,
                       transition: 'all 0.2s ease',
                       '&:hover': {
@@ -258,9 +298,9 @@ const Dashboard = () => {
                         border: `1px solid ${action.color}55`,
                       },
                     }}>
-                      <Box sx={{ color: action.color, fontSize: 28 }}>{action.icon}</Box>
-                      <Typography variant="caption" fontWeight="bold" color={action.color}
-                        textAlign="center" sx={{ fontSize: 11, lineHeight: 1.3 }}>
+                      <Box sx={{ color: action.color, fontSize: { xs: 22, md: 28 } }}>{action.icon}</Box>
+                      <Typography fontWeight="bold" color={action.color} textAlign="center"
+                        sx={{ fontSize: { xs: '0.6rem', md: '0.688rem' }, lineHeight: 1.3 }}>
                         {action.label}
                       </Typography>
                     </Box>
@@ -276,9 +316,9 @@ const Dashboard = () => {
               backgroundColor: '#fff3e0',
               border: '2px solid #ff9800',
               borderRadius: 3,
-              p: 3,
+              p: { xs: 2, md: 3 },
             }}>
-              <Typography color="#e65100" fontWeight="bold" variant="body1">
+              <Typography color="#e65100" fontWeight="bold" variant="body1" sx={{ fontSize: { xs: '0.85rem', md: '1rem' } }}>
                 ⚠️ One or more accounts are AT RISK! Please deposit money within 24 hours to avoid auto-deactivation.
               </Typography>
             </Box>

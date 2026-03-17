@@ -8,5 +8,6 @@ router.get('/my', authMiddleware('CUSTOMER'), controller.getMyAccounts);
 router.get('/pending', authMiddleware('ADMIN'), controller.getAllPendingAccounts);
 router.get('/all', authMiddleware('ADMIN'), controller.getAllAccounts);
 router.put('/:accountNumber/status', authMiddleware('ADMIN'), controller.updateAccountStatus);
+router.post('/admin/create', authMiddleware('ADMIN'), controller.createAccount);
 
 module.exports = router;

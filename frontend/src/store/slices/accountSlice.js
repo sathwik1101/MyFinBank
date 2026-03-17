@@ -39,7 +39,7 @@ export const updateAccountStatus = createAsyncThunk('accounts/updateStatus', asy
 
 export const createAccount = createAsyncThunk('accounts/create', async (data, thunkAPI) => {
   try {
-    const res = await axiosInstance.post('/accounts', data);
+    const res = await axiosInstance.post('/accounts/admin/create', data);
     return res.data;
   } catch (err) {
     return thunkAPI.rejectWithValue(err.response.data.message);
@@ -64,7 +64,7 @@ const accountSlice = createSlice({
     builder.addCase(fetchAllAccounts.fulfilled, (state, action) => { state.allAccounts = action.payload; });
     builder.addCase(fetchPendingAccounts.fulfilled, (state, action) => { state.pendingAccounts = action.payload; });
     builder.addCase(updateAccountStatus.fulfilled, (state) => { state.success = 'Account status updated'; });
-    builder.addCase(createAccount.fulfilled, (state) => { state.success = 'Account request submitted'; });
+    builder.addCase(createAccount.fulfilled, (state) => { state.success = 'Account created successfully'; });
     builder.addCase(createAccount.rejected, (state, action) => { state.error = action.payload; });
   }
 });
