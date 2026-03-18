@@ -1,5 +1,6 @@
 const customerService = require('../services/customerService');
 const accountService = require('../services/accountService');
+const { sendCustomerApprovalEmail } = require('../services/emailService');
 const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
@@ -16,13 +17,11 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const customer = await customerService.loginCustomer(email, password);
-
     const token = jwt.sign(
       { id: customer.customerId, email: customer.email, role: 'CUSTOMER' },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
-
     res.json({ message: 'Login successful', token, customer: { customerId: customer.customerId, name: customer.name, email: customer.email } });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -56,16 +55,16 @@ const updateCustomerStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const customer = await customerService.updateCustomerStatus(req.params.customerId, status);
-
-    // Auto-create SAVINGS account when admin approves customer
     if (status === 'ACTIVE') {
       try {
         await accountService.createAccount(customer.customerId, 'SAVINGS');
-      } catch (accErr) {
-        // Account may already exist, ignore duplicate error
+      } catch (accErr) {}
+      try {
+        await sendCustomerApprovalEmail(customer.name, customer.email, customer.customerId);
+      } catch (emailErr) {
+        console.error('Approval email error:', emailErr.message);
       }
     }
-
     res.json({ message: 'Status updated', customer });
   } catch (error) {
     res.status(400).json({ message: error.message });

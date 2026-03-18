@@ -1,4 +1,7 @@
 const loanService = require('../services/loanService');
+const { sendLoanApprovalEmail } = require('../services/emailService');
+const Customer = require('../models/Customer');
+const Account = require('../models/Account');
 
 const applyLoan = async (req, res) => {
   try {
@@ -41,6 +44,27 @@ const getAllPendingLoans = async (req, res) => {
 const updateLoanStatus = async (req, res) => {
   try {
     const loan = await loanService.updateLoanStatus(req.params.loanId, req.body.status, req.body.interestRate);
+    if (req.body.status === 'ACTIVE') {
+      try {
+        const account = await Account.findOne({ accountNumber: loan.accountNumber });
+        if (account) {
+          const customer = await Customer.findOne({ customerId: account.customerId });
+          if (customer) {
+            await sendLoanApprovalEmail(
+              customer.name,
+              customer.email,
+              loan.loanId,
+              loan.loanAmount,
+              loan.emiAmount,
+              loan.tenureMonths,
+              loan.interestRate
+            );
+          }
+        }
+      } catch (emailErr) {
+        console.error('Loan approval email error:', emailErr.message);
+      }
+    }
     res.json({ message: `Loan ${req.body.status}`, loan });
   } catch (error) {
     res.status(400).json({ message: error.message });
